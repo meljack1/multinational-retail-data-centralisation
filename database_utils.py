@@ -2,7 +2,6 @@ import data_cleaning as dc
 import data_extraction as de
 import yaml
 from sqlalchemy import create_engine, inspect
-import psycopg2
 
 class DatabaseConnector:
     def read_db_creds(self):
