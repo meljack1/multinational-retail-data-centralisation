@@ -1,17 +1,15 @@
-import data_extraction as de
+#import data_extraction as de
 import pandas as pd
 import re
 
 class DataCleaning:
-    def __init__(self):
-        self.dex = de.DataExtractor()
     def standardise_phone_number(self, phone_number):
         phone_str = str(re.sub("([-\s])|(\+..)|(\(.+\))|^(0[0-9]+?\s?)", "", str(phone_number))).lstrip("0")
         return "00" + phone_str
-    def clean_user_data(self):
+    def clean_user_data(self, dex, du):
         """ Reads user data from table legacy_users
         """
-        user_data = self.dex.read_rds_table("legacy_users")
+        user_data = dex.read_rds_table("legacy_users", du)
         print("Read user data")
 
         """ Cleans country_code to only contain actual country codes 
@@ -53,5 +51,5 @@ class DataCleaning:
 
         return user_data
 
-dc = DataCleaning()
-print(dc.clean_user_data())
+#dc = DataCleaning()
+#print(dc.clean_user_data())

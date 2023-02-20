@@ -1,5 +1,8 @@
+import data_cleaning as dc
+import data_extraction as de
 import yaml
 from sqlalchemy import create_engine, inspect
+import psycopg2
 
 class DatabaseConnector:
     def read_db_creds(self):
@@ -19,4 +22,12 @@ class DatabaseConnector:
         engine = self.init_db_engine()
         engine.connect()
         return inspect(engine).get_table_names()
- 
+    def upload_to_db(self, table_name, dataframe):
+        db_creds = self.read_db_creds()
+        engine = create_engine(f"postgresql+psycopg2://{db_creds['USER']}:{db_creds['PASSWORD']}@{db_creds['HOST']}:{db_creds['PORT']}/{db_creds['DATABASE']}")
+        dataframe.to_sql(table_name, engine, if_exists='replace')
+
+data_cleaner = dc.DataCleaning()
+data_extractor = de.DataExtractor()
+data_connector = DatabaseConnector()
+data_connector.upload_to_db('dim_users', data_cleaner.clean_user_data(data_extractor, data_connector))
