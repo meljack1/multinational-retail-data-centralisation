@@ -50,6 +50,30 @@ class DataCleaning:
         print("Cleaned inconsistencies")
 
         return user_data
+    def clean_card_data(self, dex):
+        card_data = dex.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf")
+        
+        """ Removes trailing question marks.
+        """
+        card_data["card_number"] = card_data["card_number"].str.strip("?")
+        print("Removed trailing question marks")
+
+        """ Removes rows containing NULL or NaN card_number
+        """
+        inconsistent_rows = card_data["card_number"].isin(["NULL"])
+        card_data = card_data[~inconsistent_rows]
+
+        nan_rows = card_data["card_number"].isnull()
+        card_data = card_data[~nan_rows]
+        print("Cleaned inconsistencies")
+
+        """ Removes non-numerical card_numbers
+        """
+        card_number_validated = card_data['card_number'].str.fullmatch("[0-9]+")
+        card_data = card_data[card_number_validated]
+        print("Removed non-numerical card numbers")
+
+        return card_data
 
 #dc = DataCleaning()
 #print(dc.clean_user_data())
