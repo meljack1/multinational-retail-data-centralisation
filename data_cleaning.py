@@ -4,7 +4,7 @@ import re
 
 class DataCleaning:
     def standardise_phone_number(self, phone_number):
-        phone_str = str(re.sub("([-\s])|(\+..)|(\(.+\))|^(0[0-9]+?\s?)", "", str(phone_number))).lstrip("0")
+        phone_str = str(re.sub("([-\s])|(\+..)|(\()|(\))", "", str(phone_number))).lstrip("0")
         return "00" + phone_str
     def clean_user_data(self, dex, du):
         """ Reads user data from table legacy_users
