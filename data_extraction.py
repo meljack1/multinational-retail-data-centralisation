@@ -18,10 +18,19 @@ class DataExtractor:
     def list_number_of_stores(self, endpoint, header):
         number_of_stores = requests.get(endpoint, headers=header)
         return number_of_stores
+    def retrieve_stores_data(self, endpoint, header):
+        number_stores = int(self.list_number_of_stores("https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores", header).json()["number_stores"])
+        print(number_stores)
+        data = {}
+        for number in range(number_stores):
+            data[number] = requests.get(endpoint + str(number), headers=header).json()
+        df = pd.DataFrame(data)
+        return df
 
 de = DataExtractor()
 
-print(de.list_number_of_stores("https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores", header))
+print(de.list_number_of_stores("https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores", header).text)
+print(de.retrieve_stores_data(f"https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/", header))
 
 #print(de.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf"))
 
