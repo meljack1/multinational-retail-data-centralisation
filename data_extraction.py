@@ -24,13 +24,13 @@ class DataExtractor:
         data = {}
         for number in range(number_stores):
             data[number] = requests.get(endpoint + str(number), headers=header).json()
-        df = pd.DataFrame(data)
+        df = pd.DataFrame(data).transpose()
         return df
 
 de = DataExtractor()
 
-print(de.list_number_of_stores("https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores", header).text)
-print(de.retrieve_stores_data(f"https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/", header))
+#print(de.list_number_of_stores("https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores", header).text)
+#print(de.retrieve_stores_data(f"https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/", header))
 
 #print(de.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf"))
 

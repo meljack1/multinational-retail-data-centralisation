@@ -1,4 +1,4 @@
-#import data_extraction as de
+import data_extraction as de
 import pandas as pd
 import re
 
@@ -74,6 +74,35 @@ class DataCleaning:
         print("Removed non-numerical card numbers")
 
         return card_data
+    def clean_store_data(self, dex):
+        header = {"x-api-key": "yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX"}
+        store_data = dex.retrieve_stores_data(f"https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/", header)
 
-#dc = DataCleaning()
-#print(dc.clean_user_data())
+        """ Corrects and validates dates
+        """
+        store_data["opening_date"] = pd.to_datetime(store_data["opening_date"], infer_datetime_format=True, errors='coerce') 
+        print("Cleaned dates")
+
+        """ Cleans country_code to only contain actual country codes 
+        with 2 capital letters. Transforms country_code from object to 
+        category.
+        """
+        country_codes = store_data['country_code'].str.fullmatch("([A-Z][A-Z])")
+        store_data = store_data[country_codes]
+        store_data['country_code'] = store_data['country_code'].astype('category')
+        print("Cleaned country codes")
+
+        """ Removes rows containing NULL or NaN latitude
+        """
+        inconsistent_rows = store_data["latitude"].isin(["NULL"])
+        store_data = store_data[~inconsistent_rows]
+
+        nan_rows = store_data["latitude"].isnull()
+        store_data = store_data[~nan_rows]
+        print("Cleaned inconsistencies")
+
+        return store_data
+
+dc = DataCleaning()
+dex = de.DataExtractor()
+print(dc.clean_store_data(dex))
