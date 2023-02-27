@@ -1,4 +1,4 @@
-import data_extraction as de
+#import data_extraction as de
 import pandas as pd
 import re
 
@@ -103,6 +103,6 @@ class DataCleaning:
 
         return store_data
 
-dc = DataCleaning()
-dex = de.DataExtractor()
-print(dc.clean_store_data(dex))
+#dc = DataCleaning()
+#dex = de.DataExtractor()
+#print(dc.clean_store_data(dex))
