@@ -129,6 +129,10 @@ class DataCleaning:
         print("Cleaned inconsistencies in product data")
 
         return product_data
+    def clean_orders_data(self, dex, du):
+        orders_data = dex.read_rds_table("orders_table", du)
+        orders_data = orders_data.drop(columns=["first_name", "last_name", "1"])
+        return orders_data
 
 #dc = DataCleaning()
 #dex = de.DataExtractor()
