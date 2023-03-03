@@ -10,7 +10,7 @@ class DataCleaning:
         """ Reads user data from table legacy_users
         """
         user_data = dex.read_rds_table("legacy_users", du)
-        print("Read user data")
+        print("Read user data in user data")
 
         """ Cleans country_code to only contain actual country codes 
         with 2 capital letters. Transforms country_code from object to 
@@ -19,13 +19,13 @@ class DataCleaning:
         country_codes = user_data['country_code'].str.fullmatch("([A-Z][A-Z])")
         user_data = user_data[country_codes]
         user_data['country_code'] = user_data['country_code'].astype('category')
-        print("Cleaned country codes")
+        print("Cleaned country codes in user data")
 
         """ Validates emails with regex
         """
         email_validated = user_data['email_address'].str.fullmatch(".+\@.+\..+")
         user_data = user_data[email_validated]
-        print("Cleaned email data")
+        print("Cleaned email data in user data")
 
         """ Corrects and validates phone numbers
         """
@@ -41,13 +41,13 @@ class DataCleaning:
         """
         user_data["join_date"] = pd.to_datetime(user_data["join_date"], infer_datetime_format=True, errors='coerce') 
         user_data["date_of_birth"] = pd.to_datetime(user_data["date_of_birth"], infer_datetime_format=True, errors='coerce') 
-        print("Cleaned dates")
+        print("Cleaned dates in user data")
 
         """ Removes rows containing NULL uuid
         """
         inconsistent_rows = user_data["user_uuid"].isin(["NULL"])
         user_data = user_data[~inconsistent_rows]
-        print("Cleaned inconsistencies")
+        print("Cleaned inconsistencies in user data")
 
         return user_data
     def clean_card_data(self, dex):
@@ -56,7 +56,7 @@ class DataCleaning:
         """ Removes trailing question marks.
         """
         card_data["card_number"] = card_data["card_number"].str.strip("?")
-        print("Removed trailing question marks")
+        print("Removed trailing question marks in card data")
 
         """ Removes rows containing NULL or NaN card_number
         """
@@ -65,13 +65,13 @@ class DataCleaning:
 
         nan_rows = card_data["card_number"].isnull()
         card_data = card_data[~nan_rows]
-        print("Cleaned inconsistencies")
+        print("Cleaned inconsistencies in card data")
 
         """ Removes non-numerical card_numbers
         """
         card_number_validated = card_data['card_number'].str.fullmatch("[0-9]+")
         card_data = card_data[card_number_validated]
-        print("Removed non-numerical card numbers")
+        print("Removed non-numerical card numbers in card data")
 
         return card_data
     def clean_store_data(self, dex):
@@ -81,7 +81,7 @@ class DataCleaning:
         """ Corrects and validates dates
         """
         store_data["opening_date"] = pd.to_datetime(store_data["opening_date"], infer_datetime_format=True, errors='coerce') 
-        print("Cleaned dates")
+        print("Cleaned dates in store data")
 
         """ Cleans country_code to only contain actual country codes 
         with 2 capital letters. Transforms country_code from object to 
@@ -90,7 +90,7 @@ class DataCleaning:
         country_codes = store_data['country_code'].str.fullmatch("([A-Z][A-Z])")
         store_data = store_data[country_codes]
         store_data['country_code'] = store_data['country_code'].astype('category')
-        print("Cleaned country codes")
+        print("Cleaned country codes in store data")
 
         """ Removes rows containing NULL or NaN latitude
         """
@@ -99,23 +99,37 @@ class DataCleaning:
 
         nan_rows = store_data["latitude"].isnull()
         store_data = store_data[~nan_rows]
-        print("Cleaned inconsistencies")
+        print("Cleaned inconsistencies in store data")
 
         return store_data
-    def convert_single_product_weight(self, weight):
+    def convert_product_weights(self, weight):
         if not isinstance(weight, str):
             return
         elif re.match("([0-9]+.[0-9]*kg)", weight):
-            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789.")))
+            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789."))) + "kg"
         elif re.match("([0-9]+.[0-9]*(g|ml))", weight):
-            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789."))/1000)
+            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789."))/1000) + "kg"
         else:
             return weight
-    def convert_product_weights(self):
+    def clean_products_data(self):
         product_data = dex.extract_from_s3("s3://data-handling-public/products.csv")
-        product_data["weight"] = product_data["weight"].apply(self.convert_single_product_weight)
+
+        """ Converts product weight to kg
+        """
+        product_data["weight"] = product_data["weight"].apply(self.convert_product_weights)
+        
+        """ Removes rows containing NULL or NaN weight
+        """
+        inconsistent_rows = product_data["weight"].isin(["NULL"])
+        product_data = product_data[~inconsistent_rows]
+
+        nan_rows = product_data["latitude"].isnull()
+        product_data = product_data[~nan_rows]
+
+        print("Cleaned inconsistencies in product data")
+
         return product_data
 
 dc = DataCleaning()
 dex = de.DataExtractor()
-print(dc.convert_product_weights())
+print(dc.clean_products_data())
