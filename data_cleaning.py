@@ -111,7 +111,7 @@ class DataCleaning:
             return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789."))/1000) + "kg"
         else:
             return weight
-    def clean_products_data(self):
+    def clean_products_data(self, dex):
         product_data = dex.extract_from_s3("s3://data-handling-public/products.csv")
 
         """ Converts product weight to kg
@@ -123,13 +123,13 @@ class DataCleaning:
         inconsistent_rows = product_data["weight"].isin(["NULL"])
         product_data = product_data[~inconsistent_rows]
 
-        nan_rows = product_data["latitude"].isnull()
+        nan_rows = product_data["weight"].isnull()
         product_data = product_data[~nan_rows]
 
         print("Cleaned inconsistencies in product data")
 
         return product_data
 
-dc = DataCleaning()
-dex = de.DataExtractor()
-print(dc.clean_products_data())
+#dc = DataCleaning()
+#dex = de.DataExtractor()
+#print(dc.clean_products_data())
