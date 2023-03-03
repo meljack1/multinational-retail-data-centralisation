@@ -32,7 +32,7 @@ class DataExtractor:
         s3 = boto3.client('s3')
         url_parts = url.split("/")
         s3.download_file(url_parts[2], url_parts[3], url_parts[3])
-        df = pd.read_csv('data.csv')
+        df = pd.read_csv(url_parts[3])
         return df
 
 de = DataExtractor()
