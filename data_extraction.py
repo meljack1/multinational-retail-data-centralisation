@@ -28,7 +28,6 @@ class DataExtractor:
         df = pd.DataFrame(data).transpose()
         return df
     def extract_from_s3(self, url):
-        #response = requests.get(url)
         s3 = boto3.client('s3')
         url_parts = url.split("/")
         s3.download_file(url_parts[2], url_parts[3], url_parts[3])
@@ -42,7 +41,7 @@ de = DataExtractor()
 
 #print(de.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf"))
 
-print(de.extract_from_s3("s3://data-handling-public/products.csv"))
+#print(de.extract_from_s3("s3://data-handling-public/products.csv"))
 
 #dc = du.DatabaseConnector()
 #dc.list_db_tables()

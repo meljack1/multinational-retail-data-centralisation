@@ -1,4 +1,4 @@
-#import data_extraction as de
+import data_extraction as de
 import pandas as pd
 import re
 
@@ -102,7 +102,20 @@ class DataCleaning:
         print("Cleaned inconsistencies")
 
         return store_data
+    def convert_single_product_weight(self, weight):
+        if not isinstance(weight, str):
+            return
+        elif re.match("([0-9]+.[0-9]*kg)", weight):
+            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789.")))
+        elif re.match("([0-9]+.[0-9]*(g|ml))", weight):
+            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789."))/1000)
+        else:
+            return weight
+    def convert_product_weights(self):
+        product_data = dex.extract_from_s3("s3://data-handling-public/products.csv")
+        product_data["weight"] = product_data["weight"].apply(self.convert_single_product_weight)
+        return product_data
 
-#dc = DataCleaning()
-#dex = de.DataExtractor()
-#print(dc.clean_store_data(dex))
+dc = DataCleaning()
+dex = de.DataExtractor()
+print(dc.convert_product_weights())
