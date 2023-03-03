@@ -2,6 +2,7 @@
 import pandas as pd
 import tabula
 import requests
+import boto3
 
 header = {"x-api-key": "yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX"}
 
@@ -26,6 +27,13 @@ class DataExtractor:
             data[number] = requests.get(endpoint + str(number), headers=header).json()
         df = pd.DataFrame(data).transpose()
         return df
+    def extract_from_s3(self, url):
+        #response = requests.get(url)
+        s3 = boto3.client('s3')
+        url_parts = url.split("/")
+        s3.download_file(url_parts[2], url_parts[3], url_parts[3])
+        df = pd.read_csv('data.csv')
+        return df
 
 de = DataExtractor()
 
@@ -33,6 +41,8 @@ de = DataExtractor()
 #print(de.retrieve_stores_data(f"https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/", header))
 
 #print(de.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf"))
+
+print(de.extract_from_s3("s3://data-handling-public/products.csv"))
 
 #dc = du.DatabaseConnector()
 #dc.list_db_tables()
