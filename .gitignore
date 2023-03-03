@@ -2,3 +2,4 @@ db_creds.yaml
 __pycache__
 data.csv
 products.csv
+date_details.json

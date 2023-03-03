@@ -133,7 +133,18 @@ class DataCleaning:
         orders_data = dex.read_rds_table("orders_table", du)
         orders_data = orders_data.drop(columns=["first_name", "last_name", "1"])
         return orders_data
+    def clean_datetime_data(self, dex):
+        datetime_data = dex.extract_from_s3("s3://data-handling-public/date_details.json")
+
+        """ Removes rows containing NULL or NaN date_uuid
+        """
+        inconsistent_rows = datetime_data["date_uuid"].isin(["NULL"])
+        datetime_data = datetime_data[~inconsistent_rows]
+
+        nan_rows = datetime_data["date_uuid"].isnull()
+        datetime_data = datetime_data[~nan_rows]
+        return datetime_data
 
 #dc = DataCleaning()
 #dex = de.DataExtractor()
-#print(dc.clean_products_data())
+#print(dc.clean_datetime_data(dex))
