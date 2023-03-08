@@ -92,6 +92,12 @@ class DataCleaning:
         store_data['country_code'] = store_data['country_code'].astype('category')
         print("Cleaned country codes in store data")
 
+        """ Removes non-numerical staff numbers
+        """
+        store_data_validated = store_data['staff_numbers'].str.fullmatch("[0-9]+")
+        store_data = store_data[store_data_validated]
+        print("Removed non-numerical card numbers in card data")
+
         """ Removes rows containing NULL or NaN latitude
         """
         inconsistent_rows = store_data["latitude"].isin(["NULL"])
