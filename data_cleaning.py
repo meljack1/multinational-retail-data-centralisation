@@ -96,7 +96,7 @@ class DataCleaning:
         """
         store_data_validated = store_data['staff_numbers'].str.fullmatch("[0-9]+")
         store_data = store_data[store_data_validated]
-        print("Removed non-numerical card numbers in card data")
+        print("Removed non-numerical staff numbers in store data")
 
         """ Removes rows containing NULL or NaN latitude
         """
@@ -123,6 +123,12 @@ class DataCleaning:
         """ Converts product weight to kg
         """
         product_data["weight"] = product_data["weight"].apply(self.convert_product_weights)
+
+        """ Removes non-numerical weights
+        """
+        product_data_validated = product_data['weight'].str.fullmatch("[0-9]+")
+        product_data = product_data[product_data_validated]
+        print("Removed non-numerical weights in product data")
         
         """ Removes rows containing NULL or NaN weight
         """
