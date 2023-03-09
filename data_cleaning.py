@@ -112,9 +112,9 @@ class DataCleaning:
         if not isinstance(weight, str):
             return
         elif re.match("([0-9]+.[0-9]*kg)", weight):
-            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789."))) + "kg"
+            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789.")))
         elif re.match("([0-9]+.[0-9]*(g|ml))", weight):
-            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789."))/1000) + "kg"
+            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789."))/1000)
         else:
             return weight
     def clean_products_data(self, dex):
