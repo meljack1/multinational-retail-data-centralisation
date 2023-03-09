@@ -136,7 +136,7 @@ class DataCleaning:
 
         """ Removes non-numerical weights
         """
-        product_data_validated = product_data['weight'].str.fullmatch("[0-9]+")
+        product_data_validated = product_data['weight'].str.fullmatch("[0-9.]+")
         product_data = product_data[product_data_validated]
         print("Removed non-numerical weights in product data")
         
