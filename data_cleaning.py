@@ -124,12 +124,6 @@ class DataCleaning:
         """
         product_data["weight"] = product_data["weight"].apply(self.convert_product_weights)
 
-        """ Removes non-numerical weights
-        """
-        product_data_validated = product_data['weight'].str.fullmatch("[0-9]+")
-        product_data = product_data[product_data_validated]
-        print("Removed non-numerical weights in product data")
-        
         """ Removes rows containing NULL or NaN weight
         """
         inconsistent_rows = product_data["weight"].isin(["NULL"])
@@ -140,6 +134,12 @@ class DataCleaning:
 
         print("Cleaned inconsistencies in product data")
 
+        """ Removes non-numerical weights
+        """
+        product_data_validated = product_data['weight'].str.fullmatch("[0-9]+")
+        product_data = product_data[product_data_validated]
+        print("Removed non-numerical weights in product data")
+        
         return product_data
     def clean_orders_data(self, dex, du):
         orders_data = dex.read_rds_table("orders_table", du)
