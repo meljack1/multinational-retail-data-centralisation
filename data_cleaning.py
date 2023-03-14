@@ -155,6 +155,13 @@ class DataCleaning:
 
         nan_rows = datetime_data["date_uuid"].isnull()
         datetime_data = datetime_data[~nan_rows]
+
+        """ Removes non-numerical months
+        """
+        datetime_data_validated = datetime_data['month'].str.fullmatch("[0-9]+")
+        datetime_data = datetime_data[datetime_data_validated]
+        print("Removed non-numerical weights in datetime data")
+
         return datetime_data
 
 #dc = DataCleaning()
