@@ -111,12 +111,15 @@ class DataCleaning:
     def convert_product_weights(self, weight):
         if not isinstance(weight, str):
             return
-        elif re.match("([0-9]+.[0-9]*kg)", weight):
-            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789.")))
-        elif re.match("([0-9]+.[0-9]*(g|ml))", weight):
-            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789."))/1000)
+        elif re.match("(([0-9]+\s+x\s+)?[0-9]+.?[0-9]*kg)", weight):
+            return '{0:.2f}'.format(float(eval(''.join(c for c in weight.replace("x", "*") if c in "0123456789.*"))))
+        elif re.match("(([0-9]+\s+x\s+)?[0-9]+.?[0-9]*(g|ml))", weight):
+            return '{0:.2f}'.format(float(eval(''.join(c for c in weight.replace("x", "*") if c in "0123456789.*")))/1000)
+        elif re.match("([0-9]+.?[0-9]*oz)", weight):
+            return '{0:.2f}'.format(float(''.join(c for c in weight if c in "0123456789.*")) * 0.0283495)
         else:
-            return weight
+            print(weight)
+            return
     def clean_products_data(self, dex):
         product_data = dex.extract_from_s3("s3://data-handling-public/products.csv")
 
@@ -139,7 +142,7 @@ class DataCleaning:
         product_data_validated = product_data['weight'].str.fullmatch("[0-9.]+")
         product_data = product_data[product_data_validated]
         print("Removed non-numerical weights in product data")
-        
+
         return product_data
     def clean_orders_data(self, dex, du):
         orders_data = dex.read_rds_table("orders_table", du)
