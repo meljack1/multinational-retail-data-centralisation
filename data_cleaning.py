@@ -94,16 +94,15 @@ class DataCleaning:
 
         """ Removes non-numerical staff numbers
         """
-        store_data_validated = store_data['staff_numbers'].str.fullmatch("[0-9]+")
-        store_data = store_data[store_data_validated]
+        store_data['staff_numbers'] = store_data['staff_numbers'].str.replace('[^0-9]','', regex=True)
         print("Removed non-numerical staff numbers in store data")
 
         """ Removes rows containing NULL or NaN latitude
         """
-        inconsistent_rows = store_data["latitude"].isin(["NULL"])
+        inconsistent_rows = store_data["store_code"].isin(["NULL"])
         store_data = store_data[~inconsistent_rows]
 
-        nan_rows = store_data["latitude"].isnull()
+        nan_rows = store_data["store_code"].isnull()
         store_data = store_data[~nan_rows]
         print("Cleaned inconsistencies in store data")
 
