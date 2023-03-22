@@ -16,8 +16,7 @@ class DataCleaning:
         with 2 capital letters. Transforms country_code from object to 
         category.
         """
-        country_codes = user_data['country_code'].str.fullmatch("([A-Z][A-Z])")
-        user_data = user_data[country_codes]
+        user_data['country_code'] = user_data['country_code'].str.slice(start=-2)
         user_data['country_code'] = user_data['country_code'].astype('category')
         print("Cleaned country codes in user data")
 
