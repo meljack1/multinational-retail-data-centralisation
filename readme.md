@@ -24,3 +24,4 @@ The data in this project is pulled from multiple sources:
 
 Run [database_utils.py](./database_utils.py) in the terminal to transform the data.
 
+[data_analysis.sql](./data_analysis.sql) contains some examples of queries on the completed and cleaned database.
