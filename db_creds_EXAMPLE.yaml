@@ -1,0 +1,11 @@
+RDS_HOST: aws-hostname
+RDS_PASSWORD: password
+RDS_USER: user
+RDS_DATABASE: postgres
+RDS_PORT: port
+
+HOST: localhost
+USER: user
+PASSWORD: password
+DATABASE: sales_data
+PORT: port

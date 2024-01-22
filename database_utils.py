@@ -36,4 +36,4 @@ data_connector.upload_to_db('dim_store_details', data_cleaner.clean_store_data(d
 data_connector.upload_to_db('dim_products', data_cleaner.clean_products_data(data_extractor))
 data_connector.upload_to_db('orders_table', data_cleaner.clean_orders_data(data_extractor, data_connector))
 data_connector.upload_to_db('dim_date_times', data_cleaner.clean_datetime_data(data_extractor))
-#print(data_cleaner.clean_card_data(data_extractor))
+

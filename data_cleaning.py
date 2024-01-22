@@ -164,7 +164,4 @@ class DataCleaning:
         print("Removed non-numerical weights in datetime data")
 
         return datetime_data
-
-#dc = DataCleaning()
-#dex = de.DataExtractor()
-#print(dc.clean_datetime_data(dex))
+ 

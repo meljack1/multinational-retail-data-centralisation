@@ -38,13 +38,3 @@ class DataExtractor:
         return NameError("No json or csv file found.")
 
 de = DataExtractor()
-
-#print(de.list_number_of_stores("https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores", header).text)
-#print(de.retrieve_stores_data(f"https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/", header))
-
-#print(de.retrieve_pdf_data("https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf"))
-
-#print(de.extract_from_s3("s3://data-handling-public/products.csv"))
-
-#dc = du.DatabaseConnector()
-#dc.list_db_tables()
