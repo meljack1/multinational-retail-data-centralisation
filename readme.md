@@ -22,6 +22,6 @@ The data in this project is pulled from multiple sources:
 - ```products.csv``` - product details - .csv file stored in S3 bucket - data retrieved with boto3 and read by pandas
 - ```date_details.json``` - datetime details - JSON file stored in S3 bucket - data retrieved with boto3 and read by pandas
 
-Run [database_utils.py](./database_utils.py) in the terminal to transform the data.
-
-[data_analysis.sql](./data_analysis.sql) contains some examples of queries on the completed and cleaned database.
+1. Run [database_utils.py](./database_utils.py) in the terminal to transform the data.
+2. Run the queries in [sql_queries.sql](./sql_queries.sql) to create the star-based schema.
+3. [data_analysis.sql](./data_analysis.sql) contains some examples of queries on the completed and cleaned database to give useful information.
