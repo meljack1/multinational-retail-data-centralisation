@@ -31,10 +31,6 @@ class DataCleaning:
         for index, row in user_data.iterrows():
             row = row.copy()
             user_data["phone_number"][index] = self.standardise_phone_number(row["phone_number"])
-        #user_data.loc[user_data['phone_number'].str.len() != 10] = pd.NA
-        #null_phone_numbers = user_data["phone_number"].isnull()
-        #print("Number of null phone numbers:", null_phone_numbers.sum())
-        #user_data = user_data.dropna(subset=["phone_number"])
 
         """ Corrects and validates dates
         """
